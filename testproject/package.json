@@ -1,7 +1,7 @@
 {
   "name": "testproject",
   "version": "1.0.0",
-  "description": "Test project for react-weather-forecast",
+  "description": "Test project for react-validator-form",
   "author": "Jan Jindráček",
   "license": "MIT",
   "private": true,
@@ -10,15 +10,10 @@
     "bundle": "yarn build; yarn webpack",
     "view": "yarn bundle; firefox ./public/index.html"
   },
-  "devDependencies": {
-    "@types/jquery": "^3.3.38",
-    "@types/redux": "^3.6.0",
-    "@types/redux-thunk": "^2.1.0"
-  },
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-weather-forecast": "file:../dist",
+    "react-validator-form": "file:../dist",
     "typescript": "^3.9.2",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"

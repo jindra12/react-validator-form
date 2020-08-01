@@ -1,6 +1,6 @@
 import React, { FormEvent } from "react";
 
-export interface ValidatorFormProps<T, E, F extends object, K extends { isValid: boolean }> extends React.FormHTMLAttributes<HTMLFormElement> {
+export interface ValidatorFormProps<T, E, F, K extends { isValid: boolean }> {
     validate: (contents: F) => K | Promise<K>;
     correct: (contents: F, result: K) => void;
     error: (contents: F, result: K) => void;
@@ -13,7 +13,7 @@ export interface ValidatorFormProps<T, E, F extends object, K extends { isValid:
     errorComponent?: (contents: F, result: K) => JSX.Element | null;
     apiErrorComponent?: (error: E) => JSX.Element | null;
     unfreeze?: boolean;
-    method: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
+    formProps?: React.FormHTMLAttributes<HTMLFormElement>;
 }
 
 interface State<T, E, F, K extends { isValid: boolean }> {
@@ -24,7 +24,7 @@ interface State<T, E, F, K extends { isValid: boolean }> {
     apiError: E | null;
 }
 
-export class ValidatorForm<T, E, F extends object, K extends { isValid: boolean }> extends React.Component<ValidatorFormProps<T, E, F, K>, State<T, E, F, K>> {
+export class ValidatorForm<T, E, F, K extends { isValid: boolean }> extends React.Component<ValidatorFormProps<T, E, F, K>, State<T, E, F, K>> {
     formRef: HTMLFormElement | null = null;
     tagNames: string[] = ['input', 'select', 'textarea'];
     state: State<T, E, F, K> = {
@@ -59,8 +59,9 @@ export class ValidatorForm<T, E, F extends object, K extends { isValid: boolean 
             } finally {
                 if (props.complete) {
                     props.complete(state.values);
-                    this.setState({ validation: null });
                 }
+                this.setState({ validation: null });
+                this.submitButtons.forEach(button => button.disabled = false);
             }
         }
         if (props.unfreeze) {
@@ -75,7 +76,7 @@ export class ValidatorForm<T, E, F extends object, K extends { isValid: boolean 
     public render() {
         const { props, state } = this;
         return (
-            <form {...props} ref={node => this.formRef = node} onSubmit={this.validation}>
+            <form {...props.formProps} ref={node => this.formRef = node} onSubmit={this.validation}>
                 {state.validation
                     && !state.validation.isValid
                     && props.errorComponent
